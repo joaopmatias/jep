@@ -33,3 +33,18 @@ cdef int zmeh(int n) except *:
 
 def meh(n):
     zmeh(n)
+
+
+import numpy as np
+from numpy.random import random
+from numpy import conjugate, dot
+from scipy.linalg import solve
+
+def run(n=20):
+    np.random.seed(1234)
+    a = random([n, n]) + 1j * random([n, n])
+    for i in range(n):
+        a[i, i] = 20*(.1+a[i, i])
+    b = random([n, 3])
+    x = solve(a, b)
+    print('run finished', flush=True)

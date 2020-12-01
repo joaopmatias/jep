@@ -1,1 +1,1 @@
-from py_meh import meh; meh(9); meh(10)
+from py_meh import run; run()
