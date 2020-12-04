@@ -42,6 +42,7 @@ void *on_thread_3(void *vargp){
     PyEval_AcquireThread(main_state);
     PyThreadState* state = Py_NewInterpreter();
     PyRun_SimpleString("print('In a sub interpreter')\n");
+    PyRun_SimpleString("import run");
     Py_EndInterpreter(state);
     PyThreadState_Swap(main_state);
     PyEval_ReleaseThread(main_state);
@@ -52,7 +53,7 @@ int main() {
     Py_Initialize();
     PyEval_InitThreads();
     main_state = PyThreadState_Get();
-    PyRun_SimpleString("from py_meh import run; run()");
+    // PyRun_SimpleString("import run");
     Py_BEGIN_ALLOW_THREADS
 
     pthread_t thread_id;
@@ -62,7 +63,7 @@ int main() {
     pthread_join(thread_id, NULL);
 
     Py_END_ALLOW_THREADS
-    PyRun_SimpleString("from py_meh import run; run()");
+    // PyRun_SimpleString("import run");
     Py_Finalize();
 
     exit(0);

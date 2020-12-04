@@ -1,13 +1,14 @@
 #!/bin/sh
 
 PYTHONHOME=/opt/miniconda3
+py_app=python3.7m
 
-$PYTHONHOME/bin/python setup.py build_ext --inplace
+${PYTHONHOME}/bin/python setup.py build_ext --inplace
 
-gcc -o c_meh -I$PYTHONHOME/include/python3.7m/ -L$PYTHONHOME/lib/ -lpython3.7m -lm c_meh.c -framework Python
+gcc -o c_run -I${PYTHONHOME}/include/${py_app}/ -L${PYTHONHOME}/lib/ -l${py_app} -lm c_run.c
 
-LD_LIBRARY_PATH=$PYTHONHOME/lib/ PYTHONPATH=. ./c_meh
+LD_LIBRARY_PATH=${PYTHONHOME}/lib/ PYTHONPATH=. ./c_run
 
-$PYTHONHOME/bin/python run.py
+${PYTHONHOME}/bin/python run.py
 
-$PYTHONHOME/bin/jep run.py
+${PYTHONHOME}/bin/jep run.py

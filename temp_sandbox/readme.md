@@ -1,7 +1,7 @@
 
-These scripts recreate the execution of a simple command showing different behaviors in cpython and jep.
+These scripts recreate the execution of simple code snippets displaying different behaviors depending on the python executable and environments used. Typically, the results of C file match those of the Jep script.
 
-The shell script file includes some scripts to help replicate the issue. Bare in mind that they were written in MacOS with Python installed through Conda, thus may require tweaking to work in other systems.
+The shell script file includes some scripts to easily run the examples. Bare in mind that they were written in MacOS with Python installed through Conda, thus may require tweaking to work in other systems.
 
 Dependencies used:
 * MacOS Catalina
@@ -11,6 +11,18 @@ Dependencies used:
 * scipy 1.5.0
 * numpy 1.18.5
 
-The issue occurs when the custom function "meh" is called.
+Most of the examples were extracted from scipy tests that can be executed as follows
+```
+$ python
+>>> import scipy
+>>> scipy.test()
+```
 
-The commands do not display problems except for when "meh(10)" is called through jep.
+The results of the examples were affected by wether scipy was compiled in the machine or installed through binaries
+```
+pip install --no-binary :all: scipy==1.5.0
+```
+and were affected by wether `openblas` was installed through conda before compiling
+```
+conda install libopenblas libgfortran nomlk
+```

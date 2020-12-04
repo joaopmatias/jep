@@ -3,10 +3,11 @@
 
 from Cython.Build import cythonize
 from setuptools import Extension, setup
-import numpy as np
+import numpy
+import os
 
-extension = Extension("py_meh", ["py_meh.pyx"],
-                      include_dirs=[np.get_include()], depends=[],
+extension = Extension("cython_examples", ["cython_examples.pyx"],
+                      include_dirs=[os.path.join(numpy.__path__[0], 'core', 'include')], depends=[],
                       libraries=[], library_dirs=[])
 
 setup(ext_modules=cythonize(extension, compiler_directives={'language_level': "3"}))
