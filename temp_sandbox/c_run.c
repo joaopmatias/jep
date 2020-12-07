@@ -42,10 +42,22 @@ void *on_thread_3(void *vargp){
     PyEval_AcquireThread(main_state);
     PyThreadState* state = Py_NewInterpreter();
     PyRun_SimpleString("print('In a sub interpreter')\n");
-    PyRun_SimpleString("import run");
+    // PyRun_SimpleString("import subprocess; subprocess.run(['python', '-c', 'import run']);");
+    PyRun_SimpleString("import t");
     Py_EndInterpreter(state);
     PyThreadState_Swap(main_state);
     PyEval_ReleaseThread(main_state);
+    return NULL;
+}
+
+void *on_thread_shared(void *vargp){
+    PyThreadState* state = PyThreadState_New(main_state->interp);
+    PyEval_AcquireThread(state);
+    PyRun_SimpleString("print('In a shared interpreter')\n");
+    PyRun_SimpleString("import t");
+    PyThreadState_Clear(state);
+    PyEval_ReleaseThread(state);
+    PyThreadState_Delete(state);
     return NULL;
 }
 
@@ -53,13 +65,14 @@ int main() {
     Py_Initialize();
     PyEval_InitThreads();
     main_state = PyThreadState_Get();
-    // PyRun_SimpleString("import run");
+    PyRun_SimpleString("import python.t");
     Py_BEGIN_ALLOW_THREADS
 
     pthread_t thread_id;
     // pthread_create(&thread_id, NULL, on_thread_1, NULL);
     // pthread_create(&thread_id, NULL, on_thread_2, NULL);
-    pthread_create(&thread_id, NULL, on_thread_3, NULL);
+    // pthread_create(&thread_id, NULL, on_thread_3, NULL);
+    // pthread_create(&thread_id, NULL, on_thread_shared, NULL);
     pthread_join(thread_id, NULL);
 
     Py_END_ALLOW_THREADS
