@@ -18,15 +18,20 @@ public class run {
         }
         try (Interpreter interp = new SharedInterpreter()) {
             interp.eval("");
-            interp.eval("import t");
-            interp.eval("print(sys.path)");
+            // interp.eval("import run");
+            // interp.eval("import t");
+            // interp.eval("print(sys.path)");
+            interp.eval("a = 9");
         } catch (JepException e) {
             System.out.println(e);
         }
 
         try (Interpreter interp = new SharedInterpreter()) {
             interp.eval("import sys");
-            interp.eval("print(sys.path)");
+            // interp.eval("print(sys.path)");
+            // interp.eval("print(sys.modules)");
+            // interp.eval("import run");
+            interp.eval("print(a)");
         } catch (JepException e) {
             System.out.println(e);
         }

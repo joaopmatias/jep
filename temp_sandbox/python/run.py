@@ -2,10 +2,12 @@
 # import subprocess
 # import signal
 import sys
-print(sys.path)
+# print(sys.path)
 print("hoy")
-sys.path.append("/Users/joao.matias/Projects/jep/python")
-print(sys.path)
+from pathlib import Path
+print(Path(Path(".").absolute().parent, "python"))
+sys.path.append("/Users/joao.matias/Projects/jep/temp_sandbox/python")
+# print(sys.path)
 def sig_handler(signum, frame):
     pass
 # signal.signal(signal.SIGILL, sig_handler)
