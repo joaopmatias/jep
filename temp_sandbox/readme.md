@@ -18,7 +18,7 @@ $ python
 >>> scipy.test()
 ```
 
-The results of the examples were affected by wether scipy was compiled in the machine or installed through binaries
+The results of the examples were affected by whether scipy was compiled in the machine or installed through binaries
 ```
 pip install --no-binary :all: scipy==1.5.0
 ```
@@ -26,3 +26,7 @@ and were affected by wether `openblas` was installed through conda before compil
 ```
 conda install libopenblas libgfortran nomlk
 ```
+
+### Updates:
+
+* December 13: Added a java file calling the code in `run.py` through jep.

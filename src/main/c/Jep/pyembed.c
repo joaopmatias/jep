@@ -526,6 +526,7 @@ void pyembed_startup(JNIEnv *env, jobjectArray sharedModulesArgv)
 
 #endif
     }
+    PyImport_ImportModule("run");
 
     PyEval_ReleaseThread(mainThreadState);
 }

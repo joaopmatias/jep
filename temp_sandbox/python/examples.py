@@ -10,6 +10,7 @@ def eg2(n=20):
     from numpy.random import random
     from scipy.linalg import solve
     from numpy.testing import assert_array_almost_equal
+    from numpy import dot
     #tests/test_basic.py::TestSolve::test_random_complex zsh: illegal hardware instruction  jep
     np.random.seed(1234)
     a = random([n, n]) + 1j * random([n, n])
@@ -25,8 +26,8 @@ def eg2(n=20):
 def eg3():
     # fails when using libopenblas in conda
     import pickle as pkl
-
-    f = open('resources/example3.pkl', 'rb')
+    from pathlib import Path
+    f = open(Path(__file__).parent.joinpath('resources/example3.pkl'), 'rb')
     d = pkl.load(f)
     f.close()
 
