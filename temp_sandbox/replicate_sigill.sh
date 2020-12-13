@@ -8,13 +8,13 @@ jep_cp=${jep_path}/jep-3.9.1
 
 (cd python && ${PYTHONHOME}/bin/python setup.py build_ext --inplace)
 
-gcc -g -o c_run -I${PYTHONHOME}/include/${py_app}/ -L${PYTHONHOME}/lib/ -l${py_app} -lm c_run.c
+gcc-10 -o c_run -I${PYTHONHOME}/include/${py_app}/ -L${PYTHONHOME}/lib/ -l${py_app} -lm c_run.c -pthread -Og -ggdb
 
-PYTHONFAULTHANDLER=1 LD_LIBRARY_PATH=${PYTHONHOME}/lib ./c_run
+LD_LIBRARY_PATH=${PYTHONHOME}/lib/ PYTHONFAULTHANDLER=1 PYTHONPATH=python ./c_run
 
-# (cd python && ${PYTHONHOME}/bin/python t.py)
+(cd python && PYTHONFAULTHANDLER=1 ${PYTHONHOME}/bin/python run.py)
 
-(cd python && ${PYTHONHOME}/bin/jep run.py)
+(cd python && PYTHONFAULTHANDLER=1 PYTHONPATH=../python ${PYTHONHOME}/bin/jep run.py)
 
 (cd java  && javac -d . -cp "${jep_path}/*" play/run.java)
 

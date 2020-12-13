@@ -1,4 +1,18 @@
 
+def run(q):
+    import threading
+    q.put(threading.current_thread())
+    #eg1()
+    #eg2()
+    #eg3()
+    #eg4()
+    #eg5()
+    #eg6()
+    #eg7()
+    eg8()
+    raise ValueError
+
+
 def eg1(n=10):
     from cython_examples import py_helper
     py_helper(n)

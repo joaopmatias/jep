@@ -1,4 +1,4 @@
-#include "Python.h"
+#include "/opt/miniconda3/include/python3.7m/Python.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -45,7 +45,7 @@ void *on_thread_4(void *vargp){
     // PyRun_SimpleString("import t");
     PyObject* t;
     t = PyImport_ImportModule("sys");
-    PyRun_SimpleString("import sys");
+    // PyRun_SimpleString("import t");
     // PyRun_SimpleString("print(sys.path)");
     Py_EndInterpreter(state);
     PyThreadState_Swap(main_state);
@@ -74,7 +74,7 @@ void *on_thread_shared(void *vargp){
     PyRun_SimpleString("print('In a shared interpreter')\n");
     PyObject* t;
     t = PyImport_ImportModule("sys");
-    PyRun_SimpleString("import examples");
+    // PyRun_SimpleString("import examples");
     // PyRun_SimpleString("print(sys.path)");
     PyThreadState_Clear(state);
     PyEval_ReleaseThread(state);
@@ -88,8 +88,8 @@ void *on_thread_shared2(void *vargp){
     PyRun_SimpleString("print('In a shared interpreter')\n");
     PyObject* t;
     t = PyImport_ImportModule("sys");
-    PyRun_SimpleString("import t");
-    PyRun_SimpleString("print(sys.modules)");
+    PyRun_SimpleString("import run");
+    // PyRun_SimpleString("print(sys.modules)");
     PyThreadState_Clear(state);
     PyEval_ReleaseThread(state);
     PyThreadState_Delete(state);
@@ -97,5 +97,37 @@ void *on_thread_shared2(void *vargp){
 }
 
 int main() {
-    return 0;
+    Py_Initialize();
+    PyEval_InitThreads();
+    PyObject* threadingModule = NULL;
+    PyObject* lockCreator     = NULL;
+    threadingModule = PyImport_ImportModule("threading");
+    lockCreator = PyObject_GetAttrString(threadingModule, "Lock");
+    Py_DECREF(threadingModule);
+    Py_DECREF(lockCreator);
+    PyRun_SimpleString("import sys");
+    // PyRun_SimpleString("import run");
+    PyObject* t;
+    main_state = PyThreadState_Get();
+    // t = PyImport_ImportModule("t");
+    // PyRun_SimpleString("import python.t");
+    Py_BEGIN_ALLOW_THREADS
+
+    pthread_t thread_id, thread_id2, thread_id3, thread_id4;
+    // pthread_create(&thread_id, NULL, on_thread_1, NULL);
+    // pthread_create(&thread_id, NULL, on_thread_2, NULL);
+    pthread_create(&thread_id3, NULL, on_thread_3, NULL);
+    pthread_join(thread_id3, NULL);
+    pthread_create(&thread_id4, NULL, on_thread_4, NULL);
+    pthread_join(thread_id4, NULL);
+    pthread_create(&thread_id, NULL, on_thread_shared, NULL);
+    pthread_join(thread_id, NULL);
+    pthread_create(&thread_id2, NULL, on_thread_shared2, NULL);
+    pthread_join(thread_id2, NULL);
+
+    Py_END_ALLOW_THREADS
+    // PyRun_SimpleString("import run");
+    Py_Finalize();
+
+    exit(0);
 }
