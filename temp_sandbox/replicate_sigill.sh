@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PYTHONHOME=/opt/miniconda3
+PYTHONHOME=/opt/miniconda3/envs/normal-scipy37
 py_version=python3.7
 py_app=${py_version}m
 jep_path=${PYTHONHOME}/lib/${py_version}/site-packages/jep

@@ -93,22 +93,22 @@ void on_thread_shared2(void *vargp){
     PyObject* t, *v, *u;
     //t = PyImport_ImportModule("run");
     // PyRun_SimpleString("import threading; threading.current_thread().join()");
-    PyThreadState_Swap(NULL);
-    PyThreadState* sstate = Py_NewInterpreter();
-    thread_done = PyThread_allocate_lock();
+    // PyThreadState_Swap(NULL);
+    // PyThreadState* sstate = Py_NewInterpreter();
+    // thread_done = PyThread_allocate_lock();
     t = PyImport_ImportModule("run");
     v = PyObject_GetAttrString(t, "run");
-    u = PyObject_CallObject(v, (void*)NULL);
-    PyThread_release_lock(thread_done);
-    Py_EndInterpreter(sstate);
-    PyThreadState_Swap(state);
+    // u = PyObject_CallObject(v, (void*)NULL);
+    // PyThread_release_lock(thread_done);
+    // Py_EndInterpreter(sstate);
+    // PyThreadState_Swap(state);
     // PyThread_start_new_thread(v, NULL);
     // PyRun_SimpleString("import run");
     // PyRun_SimpleString("print(sys.modules)");
+    PyEval_ReleaseThread(state);
     PyThreadState_Clear(state);
     // PyThreadState_DeleteCurrent();
     PyThreadState_Delete(state);
-    PyEval_ReleaseThread(state);
     //return NULL;
 }
 
