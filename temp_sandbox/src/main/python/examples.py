@@ -187,3 +187,50 @@ def eg8():
         x = solve(a, b, sym_pos=1)
         assert_array_almost_equal(dot(a, x), b)
     print('Example 8 finished', flush=True)
+
+
+def eg9():
+    import sys
+    import subprocess
+    PUBLIC_SUBMODULES = [
+        'cluster',
+        'cluster.hierarchy',
+        'cluster.vq',
+        'constants',
+        'fft',
+        'fftpack',
+        'fftpack.convolve',
+        'integrate',
+        'interpolate',
+        'io',
+        'io.arff',
+        'io.wavfile',
+        'linalg',
+        'linalg.blas',
+        'linalg.lapack',
+        'linalg.interpolative',
+        'misc',
+        'ndimage',
+        'odr',
+        'optimize',
+        'signal',
+        'sparse',
+        'sparse.csgraph',
+        'sparse.linalg',
+        'spatial',
+        'spatial.distance',
+        'special',
+        'stats',
+        'stats.mstats',
+    ]
+
+    # Regression test for gh-6793.
+    import scipy; scipy.test()
+    print(sys.executable)
+    for name in PUBLIC_SUBMODULES:
+        try:
+            cmd = [sys.executable, '-c', 'import scipy.{0}'.format(name)]
+            subprocess.check_output(cmd)
+        except subprocess.CalledProcessError:
+            raise AssertionError('Importing scipy.{0} failed'.format(name))
+    print('Example 9 finished', flush=True)

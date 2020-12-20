@@ -24,4 +24,4 @@ if test "x$args" = "x"; then
   args="{install_lib}jep/console.py"
 fi
 
-exec java -classpath "$cp" -Djava.library.path="$jni_path" jep.Run $args
+exec java -Xss4m -classpath "$cp" -Djava.library.path="$jni_path" jep.Run $args
