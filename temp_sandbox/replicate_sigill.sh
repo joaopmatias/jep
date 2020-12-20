@@ -21,7 +21,7 @@ echo "\n   Python"
 
 echo "\n   Jep"
 
-(cd python && PYTHONFAULTHANDLER=1 PYTHONPATH=${modules_dir} ${PYTHONHOME}/bin/jep run.py)
+#(cd python && PYTHONFAULTHANDLER=1 PYTHONPATH=${modules_dir} ${PYTHONHOME}/bin/jep run.py)
 
 echo "\n   Java"
 
