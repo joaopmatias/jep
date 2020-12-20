@@ -92,16 +92,23 @@ void on_thread_shared2(void *vargp){
     PyRun_SimpleString("print('In a shared interpreter')\n");
     PyObject* t, *v, *u;
     //t = PyImport_ImportModule("run");
+    // PyRun_SimpleString("import threading; threading.current_thread().join()");
+    PyThreadState_Swap(NULL);
+    PyThreadState* sstate = Py_NewInterpreter();
+    thread_done = PyThread_allocate_lock();
     t = PyImport_ImportModule("run");
     v = PyObject_GetAttrString(t, "run");
-    PyRun_SimpleString("import threading; threading.current_thread().join()");
-    u = PyObject_CallObject(u, NULL);
+    u = PyObject_CallObject(v, (void*)NULL);
+    PyThread_release_lock(thread_done);
+    Py_EndInterpreter(sstate);
+    PyThreadState_Swap(state);
     // PyThread_start_new_thread(v, NULL);
     // PyRun_SimpleString("import run");
     // PyRun_SimpleString("print(sys.modules)");
     PyThreadState_Clear(state);
-    PyEval_ReleaseThread(state);
+    // PyThreadState_DeleteCurrent();
     PyThreadState_Delete(state);
+    PyEval_ReleaseThread(state);
     //return NULL;
 }
 
@@ -140,7 +147,7 @@ int main() {
     callback->func = &on_thread_shared2;
     callback->arg = (void*)NULL;
 
-    thread_done = PyThread_allocate_lock();
+    // thread_done = PyThread_allocate_lock();
     PyRun_SimpleString("import threading");
     PyRun_SimpleString("print(threading.current_thread())");
 
@@ -150,19 +157,19 @@ int main() {
     // pthread_create(&thread_id, NULL, on_thread_1, NULL);
     // pthread_create(&thread_id, NULL, on_thread_2, NULL);
     // pthread_create(&thread_id3, (pthread_attr_t*)NULL, on_thread_3, callback);
-    a = PyImport_ImportModule("examples");
-    b = PyObject_GetAttrString(a, "eg1");
-    PyThread_start_new_thread(b, NULL);
-    PyThread_acquire_lock(thread_done, 1);
+    // a = PyImport_ImportModule("examples");
+    // b = PyObject_GetAttrString(a, "eg1");
+    // PyThread_start_new_thread(b, NULL);
+    // PyThread_acquire_lock(thread_done, 1);
     // pthread_join(thread_id3, NULL);
     // on_thread_3((void *)NULL);
     // pthread_create(&thread_id4, (pthread_attr_t*)NULL, on_thread_4, callback);
     // pthread_join(thread_id4, NULL);
     // pthread_create(&thread_id, (pthread_attr_t*)NULL, on_thread_shared, callback);
     // pthread_join(thread_id, NULL);
-    // pthread_create(&thread_id2, (pthread_attr_t*)NULL, pythread_wrapper, callback);
+    pthread_create(&thread_id2, (pthread_attr_t*)NULL, pythread_wrapper, callback);
     // pthread_detach(thread_id2);
-    // pthread_join(thread_id2, NULL);
+    pthread_join(thread_id2, NULL);
     // PyThread_acquire_lock(thread_done, 1);
 
     Py_END_ALLOW_THREADS
