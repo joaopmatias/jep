@@ -16,11 +16,11 @@ import threading
 from queue import Queue
 q = Queue()
 throw_exception = False
-inception = threading.Thread(target=run, args=(q, throw_exception))
-inception.start()
-inception.join()
-print("\nMessage sent from: " + q.get())
-print("Main thread is: " + q.get())
+# inception = threading.Thread(target=run, args=(q, throw_exception))
+# inception.start()
+# inception.join()
+# print("\nMessage sent from: " + q.get())
+# print("Main thread is: " + q.get())
 
 print("\n* Python threading finished *")
 

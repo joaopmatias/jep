@@ -87,8 +87,10 @@ void *on_thread_shared(void *vargp){
 }
 
 void on_thread_shared2(void *vargp){
-    PyThreadState* state = PyThreadState_New(main_state->interp);
-    PyEval_AcquireThread(state);
+    // PyThreadState* state = PyThreadState_New(main_state->interp);
+    // PyEval_AcquireThread(state);
+    PyGILState_STATE gstate;
+    gstate = PyGILState_Ensure();
     PyRun_SimpleString("print('In a shared interpreter')\n");
     PyObject* t, *v, *u;
     //t = PyImport_ImportModule("run");
@@ -105,10 +107,11 @@ void on_thread_shared2(void *vargp){
     // PyThread_start_new_thread(v, NULL);
     // PyRun_SimpleString("import run");
     // PyRun_SimpleString("print(sys.modules)");
-    PyEval_ReleaseThread(state);
-    PyThreadState_Clear(state);
-    // PyThreadState_DeleteCurrent();
-    PyThreadState_Delete(state);
+    PyGILState_Release(gstate);
+    // PyEval_ReleaseThread(state);
+    // PyThreadState_Clear(state);
+    // // PyThreadState_DeleteCurrent();
+    // PyThreadState_Delete(state);
     //return NULL;
 }
 
@@ -156,7 +159,7 @@ int main() {
     pthread_t thread_id, thread_id2, thread_id3, thread_id4;
     // pthread_create(&thread_id, NULL, on_thread_1, NULL);
     // pthread_create(&thread_id, NULL, on_thread_2, NULL);
-    // pthread_create(&thread_id3, (pthread_attr_t*)NULL, on_thread_3, callback);
+    pthread_create(&thread_id3, (pthread_attr_t*)NULL, on_thread_3, callback);
     // a = PyImport_ImportModule("examples");
     // b = PyObject_GetAttrString(a, "eg1");
     // PyThread_start_new_thread(b, NULL);

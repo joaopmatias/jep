@@ -15,7 +15,6 @@ public class run {
         JepConfig config = new JepConfig();
         // config.addSharedModules("run_check_threads");
 
-        
         try (Interpreter interp = new SubInterpreter(config)) {
             // if one or more examples are not skipped it will throw an error due to shared resources
             System.out.println("\n   SubInterpreter");
