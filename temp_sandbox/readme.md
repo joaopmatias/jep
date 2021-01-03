@@ -30,3 +30,5 @@ conda install libopenblas libgfortran nomlk
 ### Updates:
 
 * December 13: Added a java file calling the code in `run.py` through jep.
+
+* January 3: Increased stack size in `c_run.c` and java (in `replicate_sigill.sh`) to 4MB. As a result the outputs are closer to the `python` executable. Reorganized code folder structure.

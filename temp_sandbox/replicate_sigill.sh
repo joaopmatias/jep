@@ -1,8 +1,13 @@
 #!/bin/sh
 
+# The following commands were made to work with miniconda3
+
+##### Confirm environment variables #####
 PYTHONHOME=/opt/miniconda3
 py_version=python3.7
 py_app=${py_version}m
+#########################################
+
 jep_path=${PYTHONHOME}/lib/${py_version}/site-packages/jep
 jep_cp=${jep_path}/jep-3.9.1
 python_subfolder=${PWD}/src/main/python
