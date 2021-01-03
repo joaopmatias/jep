@@ -9,11 +9,11 @@ python_subfolder=${PWD}/src/main/python
 java_subfolder=${PWD}/src/main/java
 c_subfolder=${PWD}/src/main/c
 
-(cd python && ${PYTHONHOME}/bin/python setup.py build_ext --inplace)
+(cd ${python_subfolder} && ${PYTHONHOME}/bin/python setup.py build_ext --inplace)
 
 echo "\n   C"
 
-gcc -g ${c_subfolder}/c_run.c -o c_run -I${PYTHONHOME}/include/${py_app}/ -L${PYTHONHOME}/lib/ -l${py_app} -pthread
+gcc -pthread -g ${c_subfolder}/c_run.c -o c_run -I${PYTHONHOME}/include/${py_app}/ -L${PYTHONHOME}/lib/ -l${py_app}
 
 LD_LIBRARY_PATH=${PYTHONHOME}/lib/ PYTHONFAULTHANDLER=1 PYTHONPATH=${python_subfolder} ./c_run
 

@@ -20,11 +20,15 @@ def hi():
     print("hello")
 import threading
 # import _thread
-# from queue import Queue
-# q = Queue()
+from queue import Queue
+q = Queue()
 # skip_examples = (1,2,3,6,7,8,9)
 # throw_exception = False
 # _thread.start_new_thread(run, ())
+inception = threading.Thread(target=run, args=())
+inception.start()
+inception.join()
+
 inception = threading.Thread(target=run, args=())
 inception.start()
 inception.join()
@@ -34,7 +38,7 @@ inception.join()
 
 print("\n* Python threading finished *")
 
-run()
+
 # run(q, skip_examples, throw_exception)
 # print("\nMessage sent from: " + q.get())
 # print("Main thread is: " + q.get())
