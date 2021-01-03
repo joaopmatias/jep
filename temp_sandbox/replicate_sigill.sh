@@ -29,7 +29,7 @@ echo "\n   Java"
 
 (cd ${java_subfolder} && javac -d . -cp "${jep_path}/*" play/run.java)
 
-(cd ${java_subfolder} && PYTHONFAULTHANDLER=1 PYTHONPATH=${python_subfolder} java -cp "${jep_path}/*:." -Djava.library.path="${jep_path}" play.run)
+(cd ${java_subfolder} && PYTHONFAULTHANDLER=1 PYTHONPATH=${python_subfolder} java -Xss4m -cp "${jep_path}/*:." -Djava.library.path="${jep_path}" play.run)
 
 
 # Clean
