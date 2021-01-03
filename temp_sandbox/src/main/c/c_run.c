@@ -184,7 +184,7 @@ fflush(stdout);
     t = PyImport_ImportModule("run");
     v = PyObject_GetAttrString(t, "run");
     u = PyObject_CallObject(v, NULL);
-    printf("adasdas");
+    printf("adasda555s");
     // Py_Finalize();
     // return NULL;
     pthread_cond_signal( &condition_var );
@@ -198,7 +198,7 @@ fflush(stdout);
     // PyThread_release_lock(lock);
 
  pthread_mutex_unlock( &count_mutex );
-    // PyThread_exit_thread();
+    PyThread_exit_thread();
     return NULL;
 }
 
@@ -301,73 +301,28 @@ pythread_wrapper(void *arg)
     return NULL;
 }
 
-unsigned long
+void
 my_PyThread_start_new_thread(void (*func)(void *), void *arg)
 {
     pthread_t th;
-    int status;
-#if defined(THREAD_STACK_SIZE) || defined(PTHREAD_SYSTEM_SCHED_SUPPORTED)
     pthread_attr_t attrs;
-#endif
-#if defined(THREAD_STACK_SIZE)
     size_t      tss;
-#endif
-
-    PyThread_init_thread();
-
-#if defined(THREAD_STACK_SIZE) || defined(PTHREAD_SYSTEM_SCHED_SUPPORTED)
     if (pthread_attr_init(&attrs) != 0)
-        return PYTHREAD_INVALID_THREAD_ID;
-#endif
-#if defined(THREAD_STACK_SIZE)
+        return ;
     PyThreadState *tstate = main_state;
     size_t stacksize = tstate ? tstate->interp->pythread_stacksize : 0;
     tss = (stacksize != 0) ? stacksize : THREAD_STACK_SIZE;
     if (tss != 0) {
         if (pthread_attr_setstacksize(&attrs, tss) != 0) {
             pthread_attr_destroy(&attrs);
-            return PYTHREAD_INVALID_THREAD_ID;
+            return ;
         }
     }
-#endif
-#if defined(PTHREAD_SYSTEM_SCHED_SUPPORTED)
     pthread_attr_setscope(&attrs, PTHREAD_SCOPE_SYSTEM);
-#endif
 
-    pythread_callback *callback = PyMem_RawMalloc(sizeof(pythread_callback));
-
-    if (callback == NULL) {
-      return PYTHREAD_INVALID_THREAD_ID;
-    }
-
-    callback->func = func;
-    callback->arg = arg;
-
-    status = pthread_create(&th,
-#if defined(THREAD_STACK_SIZE) || defined(PTHREAD_SYSTEM_SCHED_SUPPORTED)
-                             &attrs,
-#else
-                             (pthread_attr_t*)NULL,
-#endif
-                             pythread_wrapper, callback);
-
-#if defined(THREAD_STACK_SIZE) || defined(PTHREAD_SYSTEM_SCHED_SUPPORTED)
+    pthread_create(&th, &attrs, func, NULL);
     pthread_attr_destroy(&attrs);
-#endif
-
-    if (status != 0) {
-        PyMem_RawFree(callback);
-        return PYTHREAD_INVALID_THREAD_ID;
-    }
-
-    pthread_join(th);
-    pthread_detach(th);
-
-#if SIZEOF_PTHREAD_T <= SIZEOF_LONG
-    return (unsigned long) th;
-#else
-    return (unsigned long) *(unsigned long *) &th;
-#endif
+    pthread_join(th, NULL);
 }
 
 
@@ -383,7 +338,14 @@ my_PyThread_start_new_thread(void (*func)(void *), void *arg)
 
 int main() {
     pthread_t thread_id, thread_id2, thread_id3, thread_id4;
-
+    pthread_attr_t attrs;
+    if (pthread_attr_init(&attrs) != 0)
+        return -1;
+    if (pthread_attr_setstacksize(&attrs, THREAD_STACK_SIZE) != 0) {
+        pthread_attr_destroy(&attrs);
+        return -1;
+    }
+    pthread_attr_setscope(&attrs, PTHREAD_SCOPE_SYSTEM);
 
     // PyThread_type_lock lock = PyThread_allocate_lock();
 
@@ -402,14 +364,16 @@ int main() {
     PyRun_SimpleString("print(123, flush=True)");
 
     Py_BEGIN_ALLOW_THREADS
-    my_PyThread_start_new_thread(&on_thread_shared3, (void*)NULL);
+    pthread_create(&thread_id2, &attrs, on_thread_shared3, NULL);
+    pthread_attr_destroy(&attrs);
+    pthread_join(thread_id2, NULL);
     // on_thread_shared3((void*)NULL);
     printf("aiaiaa");
     fflush(stdout);
     // pthread_create(&thread_id2, NULL, on_thread_shared4, NULL);
     // // pthread_create(&thread_id, (pthread_attr_t*)NULL, pythread_wrapper, callback);
     // // pthread_detach(thread_id2);
-    pthread_cond_wait( &condition_var , &count_mutex);
+    // pthread_cond_wait( &condition_var , &count_mutex);
     // pthread_detach(thread_id2);
     // // PyThread_start_new_thread(on_thread_shared3, &lock);
     // pthread_detach(thread_id2);

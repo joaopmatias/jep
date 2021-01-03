@@ -3,7 +3,7 @@ print("\n*** run.py started ***")
 
 # this function also has the option to skip some examples and/or throw and exception
 def run():
-    skip_examples = (1,3,4,5,6,7,8,9)
+    skip_examples = (6,7,8,9)
     throw_exception = False
     import threading
     from examples import eg1, eg2, eg3, eg4, eg5, eg6, eg7, eg8, eg9
